@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class SettingController extends Controller
 {
@@ -12,7 +13,8 @@ class SettingController extends Controller
      */
     public function index()
     {
-        //
+        $data = Setting::all();
+        return view('dash.setting.all', compact('data'));
     }
 
     /**
@@ -20,7 +22,7 @@ class SettingController extends Controller
      */
     public function create()
     {
-        //
+        return view('dash.setting.add');
     }
 
     /**
@@ -28,7 +30,27 @@ class SettingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $locales = LaravelLocalization::getSupportedLocales();
+        ;
+        $rules = [
+            'logo' => 'required|image',
+            'favicon' => 'required|image',
+            'facebook' => 'required|string',
+            'linkedin' => 'required|string',
+            'email' => 'required|string',
+            'phone' => 'required|string',
+        ];
+
+        foreach($locales  as $localeCode => $properties) {
+            $rules["{$localeCode}.title"] = 'required|string';
+            $rules["{$localeCode}.content"] = 'required|string';
+        }
+
+        $request->validate($rules);
+
+        $allSettingsWithoutImages = $request->except(['logo','favicon']);
+        Setting::create($allSettingsWithoutImages);
+
     }
 
     /**

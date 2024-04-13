@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,7 +15,38 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::group(
+    [
+        'prefix' => LaravelLocalization::setLocale(),
+        'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]
+    ],
+    function () {
+        Route::get('/', function () {
+            return view('welcome');
+        });
 
-Route::get('/', function () {
-    return view('welcome');
+    }
+);
+
+Route::prefix('dashboard')
+    ->middleware(['auth', 'verified' , 'dashAccess'])
+    ->as('dashboard.')
+    ->group(function () {
+
+        Route::get('/', function () {
+            return view('dashboard');
+        })->name('main');
+
+        Route::resources([
+            'setting' => SettingController::class,
+        ]);
+    });
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+require __DIR__.'/auth.php';
