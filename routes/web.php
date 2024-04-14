@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\UserController;
+use App\Models\User;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
@@ -39,7 +41,12 @@ Route::prefix('dashboard')
 
         Route::resources([
             'setting' => SettingController::class,
+            'users' => UserController::class,
         ]);
+
+        Route::get('users/restore/{user}', [UserController::class , 'restore'])->name('users.restore');
+        Route::get('users/erase/{user}', [UserController::class , 'erase'])->name('users.erase');
+
     });
 
 

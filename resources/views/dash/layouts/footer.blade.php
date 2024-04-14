@@ -40,6 +40,8 @@
 <script src="{{ asset('dash_assets/vendors/jquery-toast-plugin/dist/jquery.toast.min.js') }}"></script>
 
 <!-- Init JavaScript -->
+@stack('custom_js')
+
 <script src="{{ asset('dash_assets/dist/js/init.js') }}"></script>
 <script src="{{ asset('dash_assets/dist/js/dashboard4-data.js') }}"></script>
 

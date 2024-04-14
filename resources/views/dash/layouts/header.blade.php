@@ -19,7 +19,7 @@
     <!-- Toastr CSS -->
     <link href="{{ asset('dash_assets/vendors/jquery-toast-plugin/dist/jquery.toast.min.css') }}" rel="stylesheet"
         type="text/css">
-
+@stack('custom_css')
     <!-- Custom CSS -->
     <link href="{{ asset('dash_assets/dist/css/style.css') }}" rel="stylesheet" type="text/css">
 </head>
@@ -257,6 +257,13 @@
                             <a class="nav-link link-with-badge" href="{{ route('dashboard.setting.index') }}">
                                 <span class="feather-icon"><i data-feather="package"></i></span>
                                 <span class="nav-link-text">Website Settings</span>
+
+                            </a>
+                        </li>
+                        <li class="nav-item {{ request()->segment(2) == 'user' ? 'active' : '' }}">
+                            <a class="nav-link link-with-badge" href="{{ route('dashboard.users.index') }}">
+                                <span class="feather-icon"><i data-feather="package"></i></span>
+                                <span class="nav-link-text">Website Users</span>
 
                             </a>
                         </li>
