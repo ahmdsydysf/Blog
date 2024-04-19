@@ -19,7 +19,7 @@
     <!-- Toastr CSS -->
     <link href="{{ asset('dash_assets/vendors/jquery-toast-plugin/dist/jquery.toast.min.css') }}" rel="stylesheet"
         type="text/css">
-@stack('custom_css')
+    @stack('custom_css')
     <!-- Custom CSS -->
     <link href="{{ asset('dash_assets/dist/css/style.css') }}" rel="stylesheet" type="text/css">
 </head>
@@ -260,10 +260,24 @@
 
                             </a>
                         </li>
-                        <li class="nav-item {{ request()->segment(2) == 'user' ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->segment(2) == 'users' ? 'active' : '' }}">
                             <a class="nav-link link-with-badge" href="{{ route('dashboard.users.index') }}">
                                 <span class="feather-icon"><i data-feather="package"></i></span>
                                 <span class="nav-link-text">Website Users</span>
+
+                            </a>
+                        </li>
+                        <li class="nav-item {{ request()->segment(2) == 'categories' ? 'active' : '' }}">
+                            <a class="nav-link link-with-badge" href="{{ route('dashboard.categories.index') }}">
+                                <span class="feather-icon"><i data-feather="package"></i></span>
+                                <span class="nav-link-text">Website Categories</span>
+
+                            </a>
+                        </li>
+                        <li class="nav-item {{ request()->segment(2) == 'posts' ? 'active' : '' }}">
+                            <a class="nav-link link-with-badge" href="{{ route('dashboard.posts.index') }}">
+                                <span class="feather-icon"><i data-feather="package"></i></span>
+                                <span class="nav-link-text">Website Posts</span>
 
                             </a>
                         </li>

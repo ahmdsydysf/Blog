@@ -34,7 +34,7 @@ class SettingController extends Controller
 
         $rules = [
             'logo' => 'required|image',
-            'favicon' => 'required|image',
+            'favicon' => 'required',
             'facebook' => 'required|string',
             'linkedin' => 'required|string',
             'email' => 'required|string',
@@ -93,7 +93,6 @@ class SettingController extends Controller
 
         $rules = [
             'logo' => 'image',
-            'favicon' => 'image',
             'facebook' => 'required|string',
             'linkedin' => 'required|string',
             'email' => 'required|string',

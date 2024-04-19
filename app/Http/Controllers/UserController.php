@@ -88,18 +88,15 @@ class UserController extends Controller
     {
         $user->delete();
         return to_route('dashboard.users.index');
-
     }
     public function restore(User $user)
     {
         $user->restore();
         return to_route('dashboard.users.index');
-
     }
     public function erase(User $user)
     {
         $user->forceDelete();
         return to_route('dashboard.users.index');
-
     }
 }

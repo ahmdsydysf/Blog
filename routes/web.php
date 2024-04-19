@@ -1,10 +1,13 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\UserController;
-use App\Models\User;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MainPageController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
@@ -23,9 +26,7 @@ Route::group(
         'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]
     ],
     function () {
-        Route::get('/', function () {
-            return view('welcome');
-        });
+        Route::get('/', [MainPageController::class , 'index']);
 
     }
 );
@@ -42,11 +43,18 @@ Route::prefix('dashboard')
         Route::resources([
             'setting' => SettingController::class,
             'users' => UserController::class,
+            'categories' => CategoryController::class,
+            'posts' => PostController::class,
         ]);
 
         Route::get('users/restore/{user}', [UserController::class , 'restore'])->name('users.restore');
         Route::get('users/erase/{user}', [UserController::class , 'erase'])->name('users.erase');
 
+        Route::get('categories/restore/{category}', [CategoryController::class , 'restore'])->name('categories.restore');
+        Route::get('categories/erase/{category}', [CategoryController::class , 'erase'])->name('categories.erase');
+
+        Route::get('posts/restore/{post}', [PostController::class , 'restore'])->name('posts.restore');
+        Route::get('posts/erase/{post}', [PostController::class , 'erase'])->name('posts.erase');
     });
 
 

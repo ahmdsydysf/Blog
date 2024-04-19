@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class CategoryController extends Controller
 {
@@ -12,7 +13,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $data = Category::withTrashed()->get();
+        return view('dash.categories.all', compact('data'));
     }
 
     /**
@@ -20,7 +22,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return view('dash.categories.add', compact('categories'));
     }
 
     /**
@@ -28,7 +31,33 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $locales = LaravelLocalization::getSupportedLocales();
+
+        $rules = [
+            'image' => 'required|image',
+            'parent' => 'nullable',
+        ];
+
+        foreach($locales  as $localeCode => $properties) {
+            $rules["{$localeCode}.title"] = 'required|string';
+            $rules["{$localeCode}.content"] = 'required|string';
+        }
+
+        $request->validate($rules);
+
+        $allCategoriesWithoutImages = $request->except(['image']);
+        $category = Category::create($allCategoriesWithoutImages);
+
+        if($request->file('image')) {
+            $uploadedimage = $category->addMediaFromRequest('image')
+            ->toMediaCollection('category_image');
+
+            $category->update([
+                'image' => $uploadedimage->getUrl()
+            ]);
+        }
+
+        return redirect()->route('dashboard.categories.index');
     }
 
     /**
@@ -44,7 +73,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        $categories = Category::all();
+        return view('dash.categories.edit', compact('categories', 'category'));
     }
 
     /**
@@ -52,7 +82,35 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $locales = LaravelLocalization::getSupportedLocales();
+
+        $rules = [
+            'image' => 'image',
+            'parent' => 'nullable',
+        ];
+
+        foreach($locales  as $localeCode => $properties) {
+            $rules["{$localeCode}.title"] = 'required|string';
+            $rules["{$localeCode}.content"] = 'required|string';
+        }
+
+        $request->validate($rules);
+
+        $allCategoriesWithoutImages = $request->except(['image']);
+        $category->update($allCategoriesWithoutImages);
+
+        if($request->file('image')) {
+            $oldData = $category->media;
+            $oldData[0]->delete();
+            $uploadedimage = $category->addMediaFromRequest('image')
+            ->toMediaCollection('category_image');
+
+            $category->update([
+                'image' => $uploadedimage->getUrl()
+            ]);
+        }
+
+        return redirect()->route('dashboard.categories.index');
     }
 
     /**
@@ -60,6 +118,20 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return redirect()->route('dashboard.categories.index');
+
+    }
+
+    public function restore(Category $category)
+    {
+        $category->restore();
+        return to_route('dashboard.categories.index');
+    }
+    public function erase(Category $category)
+    {
+        $category->clearMediaCollection('category_image');
+        $category->forceDelete();
+        return to_route('dashboard.categories.index');
     }
 }
